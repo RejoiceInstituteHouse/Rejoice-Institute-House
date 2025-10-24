@@ -1,3 +1,17 @@
+// Hide dashboard content until login is confirmed
+document.body.style.visibility = "hidden";
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // Not logged in → send to login page
+    window.location.href = "login.html";
+  } else {
+    currentUserEmail = user.email;
+    document.body.style.visibility = "visible"; // show dashboard
+    loadBooks("free"); // load default books tab
+  }
+});
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
@@ -115,3 +129,10 @@ function showModal(url) {
     }
   }
 }
+const logoutBtn = document.getElementById("logout-btn");
+
+logoutBtn.addEventListener("click", () => {
+  auth.signOut().then(() => {
+    window.location.href = "login.html"; // send back to login page
+  });
+});
