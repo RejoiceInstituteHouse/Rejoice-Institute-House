@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Rejoice Institute House</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #f5f2ff;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #8c52ff;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.5rem 1rem;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logout-btn {
+      background: #fff;
+      color: #8c52ff;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #e5e0ff;
+    }
+
+    /* Main Dashboard Area */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-header h1 {
+      color: #333;
+    }
+
+    .user-info {
+      color: #555;
+      font-weight: 500;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #8c52ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .upload-btn {
+      background: #8c52ff;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .upload-btn:hover {
+      background: #6b3adb;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div>
+      <h2>Rejoice Admin</h2>
+      <a href="#">📚 My Books</a>
+      <a href="#">🎨 Artworks</a>
+      <a href="#">📝 Add New</a>
+      <a href="#">💬 Messages</a>
+      <a href="#">⚙️ Settings</a>
+    </div>
+    <div class="logout-btn" onclick="logout()">Logout</div>
+  </div>
+
+  <div class="main-content">
+    <div class="dashboard-header">
+      <h1>Welcome back, Promise 👋</h1>
+      <div class="user-info">Logged in as: <strong>Admin</strong></div>
+    </div>
+      <h2>📚 Your Library</h2>
+    <div id="books-container" class="books-grid"></div>
+
+
+    <div class="cards">
+      <div class="card">
+        <h3>Total Books</h3>
+        <p>4 Published</p>
+      </div>
+      <div class="card">
+        <h3>Artworks</h3>
+        <p>7 Uploaded</p>
+      </div>
+      <div class="card">
+        <h3>Messages</h3>
+        <p>3 New messages</p>
+      </div>
+      <div class="card">
+        <h3>Visitors</h3>
+        <p>245 This Month</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <button class="upload-btn">+ Upload New Book</button>
+    </div>
+  </div>
+
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>

@@ -184,4 +184,36 @@ nav ul li a:hover {
 .btn-login:hover {
   background-color: #4a148c; /* slightly darker on hover */
 }
+.btn-login:hover {
+  background-color: #6b3adb;
+}
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
 
+.book-card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.book-cover {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.price {
+  color: #6c63ff;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
