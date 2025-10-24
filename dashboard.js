@@ -3,7 +3,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-// Your Firebase config (paste your own details from Firebase)
+// 🔹 Firebase config - replace with YOUR actual Firebase project details
 const firebaseConfig = {
   apiKey: "AIzaSyDLhqFt4rYXJgxbu5l4q50rx1FZkARyDYE",
   authDomain: "rejoice-institute-house.firebaseapp.com",
@@ -13,62 +13,45 @@ const firebaseConfig = {
   appId: "1:154515308139:web:72b2e940af48283c787b2e"
 };
 
-// Initialize Firebase and Firestore
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Reference to where books will be displayed
+// Reference to books container
 const booksContainer = document.getElementById("books-container");
 
-// Fetch books from Firestore
-async function loadBooks() {
-  const querySnapshot = await getDocs(collection(db, "books"));
-  booksContainer.innerHTML = ""; // Clear before adding
-
-  querySnapshot.forEach((doc) => {
-    const book = doc.data();
-
-    // Create book card
-    const card = document.createElement("div");
-    card.classList.add("book-card");
-    card.innerHTML = `
-      <img src="${book.img}" alt="${book.title}" class="book-cover">
-      <h3>${book.title}</h3>
-      <p><strong>by ${book.author}</strong></p>
-      <p>${book.description}</p>
-      <p class="price">${book.price}</p>
-    `;
-    booksContainer.appendChild(card);
-  });
-}
-
-loadBooks();
-<script type="module" src="dashboard.js"></script>
+// Function to load books from Firestore
 async function loadBooks(categoryFilter = null) {
-  const querySnapshot = await getDocs(collection(db, "books"));
-  booksContainer.innerHTML = "";
+  try {
+    const querySnapshot = await getDocs(collection(db, "books"));
+    booksContainer.innerHTML = "";
 
-  querySnapshot.forEach((doc) => {
-    const book = doc.data();
+    querySnapshot.forEach((doc) => {
+      const book = doc.data();
 
-    if (!categoryFilter || book.access === categoryFilter) {
-      const card = document.createElement("div");
-      card.classList.add("book-card");
-      card.innerHTML = `
-        <img src="${book.img}" alt="${book.title}" class="book-cover">
-        <h3>${book.title}</h3>
-        <p><strong>by ${book.author}</strong></p>
-        <p>${book.description}</p>
-        <p class="price">${book.price}</p>
-      `;
-      booksContainer.appendChild(card);
-    }
-  });
+      // Filter based on tab
+      if (!categoryFilter || book.access === categoryFilter) {
+        const card = document.createElement("div");
+        card.classList.add("book-card");
+        card.innerHTML = `
+          <img src="${book.img}" alt="${book.title}" class="book-cover">
+          <h3>${book.title}</h3>
+          <p><strong>by ${book.author}</strong></p>
+          <p>${book.description}</p>
+          <p class="price">${book.price}</p>
+        `;
+        booksContainer.appendChild(card);
+      }
+    });
+
+  } catch (error) {
+    console.error("Error fetching books:", error);
+    booksContainer.innerHTML = "<p>Unable to load books. Please try again later.</p>";
+  }
 }
 
-// Tab functionality
+// 🔹 Tab buttons
 const tabs = document.querySelectorAll(".tab-btn");
-
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     tabs.forEach((t) => t.classList.remove("active"));
@@ -78,10 +61,10 @@ tabs.forEach((tab) => {
     if (tabName === "free") loadBooks("free");
     else if (tabName === "purchased") loadBooks("purchased");
     else if (tabName === "exclusive") loadBooks("exclusive");
-    else if (tabName === "library") loadBooks();
+    else if (tabName === "library") loadBooks(); // All books
   });
 });
 
-// Default load
+// 🔹 Load default tab
 loadBooks("free");
 
