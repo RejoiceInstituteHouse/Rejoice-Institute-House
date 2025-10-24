@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel – Words of Insight</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .upload-section {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .upload-section h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, textarea, select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    label {
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--accent);
+    }
+
+    .success-message {
+      background-color: #e6ffed;
+      border: 1px solid #00b14f;
+      color: #006a2f;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    .error-message {
+      background-color: #ffe6e6;
+      border: 1px solid #ff4d4d;
+      color: #b30000;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>📚 Words of Insight – Admin Upload Panel</header>
+
+  <div class="upload-section">
+    <h2>Upload a New Book</h2>
+    <form id="bookForm">
+      <label for="title">Book Title</label>
+      <input type="text" id="title" placeholder="Enter book title" required />
+
+      <label for="author">Author</label>
+      <input type="text" id="author" placeholder="Enter author name" required />
+
+      <label for="description">Description</label>
+      <textarea id="description" rows="3" placeholder="Short description"></textarea>
+
+      <label for="price">Price (enter 0 for Free)</label>
+      <input type="number" id="price" step="0.01" min="0" placeholder="Book price" required />
+
+      <label for="access">Access Level</label>
+      <select id="access" required>
+        <option value="free">Free</option>
+        <option value="purchased">Purchased</option>
+        <option value="exclusive">Exclusive</option>
+      </select>
+
+      <label for="bookCover">Book Cover Image</label>
+      <input type="file" id="bookCover" accept="image/*" required />
+
+      <label for="bookLink">Book PDF Link (optional)</label>
+      <input type="text" id="bookLink" placeholder="https://link-to-your-book.pdf" />
+
+      <button type="submit">Upload Book</button>
+    </form>
+
+    <div id="success" class="success-message">✅ Book uploaded successfully!</div>
+    <div id="error" class="error-message">❌ Error uploading book. Try again.</div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
