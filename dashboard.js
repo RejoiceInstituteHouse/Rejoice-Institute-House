@@ -1,6 +1,7 @@
+// Import Firebase libraries
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 
 // ---------------- Firebase Config ----------------
 const firebaseConfig = {
@@ -12,117 +13,64 @@ const firebaseConfig = {
   appId: "1:154515308139:web:72b2e940af48283c787b2e"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Hide dashboard until user login is confirmed
-document.body.style.visibility = "hidden";
+// Get dashboard sections
+const dashboardContent = document.getElementById("dashboard-content");
+const freeTab = document.getElementById("free-books");
+const purchasedTab = document.getElementById("purchased-books");
+const exclusiveTab = document.getElementById("exclusive-books");
+const libraryTab = document.getElementById("library-books");
 
-let currentUserEmail = "";
-onAuthStateChanged(auth, (user) => {
+// Hide dashboard until user verified
+dashboardContent.style.display = "none";
+
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "login.html"; // Redirect if not logged in
-  } else {
-    currentUserEmail = user.email;
-    document.body.style.visibility = "visible"; // Show dashboard
-    loadBooks("free"); // Load default tab
+    // If not logged in, redirect to login page
+    window.location.href = "login.html";
+    return;
   }
+
+  // Show dashboard after login
+  dashboardContent.style.display = "block";
+
+  const userEmail = user.email;
+  const booksCol = collection(db, "Words_of_Insights"); // use your collection name
+
+  const booksSnapshot = await getDocs(booksCol);
+  booksSnapshot.forEach((doc) => {
+    const book = doc.data();
+
+    // Create a book card
+    const card = document.createElement("div");
+    card.className = "book-card";
+    card.innerHTML = `
+      <img src="${book.img}" class="book-cover" />
+      <h3>${book.title}</h3>
+      <p>${book.author}</p>
+      <p>${book.description}</p>
+      <p class="price">${book.price}</p>
+      <button class="read-btn" onclick="window.open('${book.content}', '_blank')">Read</button>
+    `;
+
+    // Sort books by access
+    if (book.access === "free") freeTab.appendChild(card);
+    else if (book.access === "purchased" && book.ownerEmail === userEmail) purchasedTab.appendChild(card);
+    else if (book.access === "exclusive" && book.ownerEmail === userEmail) exclusiveTab.appendChild(card);
+
+    // Add all accessible books to library
+    if (book.access === "free" || book.ownerEmail === userEmail)
+      libraryTab.appendChild(card.cloneNode(true));
+  });
 });
 
-// Logout functionality
-const logoutBtn = document.getElementById("logout-btn");
-logoutBtn.addEventListener("click", () => {
-  auth.signOut().then(() => {
+// Handle logout
+document.getElementById("logout-btn")?.addEventListener("click", () => {
+  signOut(auth).then(() => {
     window.location.href = "login.html";
   });
 });
 
-// Books container
-const booksContainer = document.getElementById("books-container");
-
-// Load books from Firestore
-async function loadBooks(categoryFilter = null) {
-  try {
-    const querySnapshot = await getDocs(collection(db, "books"));
-    booksContainer.innerHTML = "";
-
-    querySnapshot.forEach((doc) => {
-      const book = doc.data();
-
-      // Filter by tab
-      if (!categoryFilter || book.access === categoryFilter) {
-
-        // Library tab only shows books belonging to this user
-        if (categoryFilter === "library" && book.ownerEmail && book.ownerEmail !== currentUserEmail) {
-          return;
-        }
-
-        const card = document.createElement("div");
-        card.classList.add("book-card");
-        card.innerHTML = `
-          <img src="${book.img}" alt="${book.title}" class="book-cover">
-          <h3>${book.title}</h3>
-          <p><strong>by ${book.author}</strong></p>
-          <p>${book.description}</p>
-          <p class="price">${book.price}</p>
-          <button class="read-btn" data-content="${book.content}">Read / Preview</button>
-        `;
-
-        booksContainer.appendChild(card);
-
-        // Read / Preview button
-        card.querySelector(".read-btn").addEventListener("click", (e) => {
-          const contentURL = e.target.getAttribute("data-content");
-          if (contentURL.endsWith(".pdf")) {
-            window.open(contentURL, "_blank"); // Open PDF in new tab
-          } else {
-            showModal(contentURL); // Show HTML/text in modal
-          }
-        });
-      }
-    });
-
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    booksContainer.innerHTML = "<p>Unable to load books. Please try again later.</p>";
-  }
-}
-
-// Tabs functionality
-const tabs = document.querySelectorAll(".tab-btn");
-tabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    tabs.forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-    const tabName = tab.getAttribute("data-tab");
-
-    if (tabName === "free") loadBooks("free");
-    else if (tabName === "purchased") loadBooks("purchased");
-    else if (tabName === "exclusive") loadBooks("exclusive");
-    else if (tabName === "library") loadBooks("library");
-  });
-});
-
-// Modal functionality
-function showModal(url) {
-  const modal = document.getElementById("modal");
-  const iframe = document.getElementById("book-frame");
-  const closeBtn = document.querySelector(".close-btn");
-
-  iframe.src = url;
-  modal.style.display = "block";
-
-  closeBtn.onclick = () => {
-    modal.style.display = "none";
-    iframe.src = "";
-  }
-
-  window.onclick = (e) => {
-    if (e.target == modal) {
-      modal.style.display = "none";
-      iframe.src = "";
-    }
-  }
-}
