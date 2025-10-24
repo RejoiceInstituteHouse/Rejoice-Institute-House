@@ -8,12 +8,25 @@
 </head>
 <body>
 
-  <header>
-    <h1>Welcome to Your Dashboard</h1>
-    <p>Explore free books, purchased titles, exclusives, and your library.</p>
-  </header>
+  <!-- Navigation (Same as Home Page) -->
+  <nav>
+    <div class="logo">Rejoice Institute House</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="books.html">Books</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <a href="login.html" class="btn-login">Login</a>
+    </ul>
+  </nav>
 
-  <!-- Tabs -->
+  <!-- Dashboard Hero -->
+  <section class="hero">
+    <h1>Welcome to Your Dashboard</h1>
+    <p>Explore Free, Purchased, Exclusive books and your personal Library.</p>
+  </section>
+
+  <!-- Tabs for Book Categories -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="free">Free Books</button>
     <button class="tab-btn" data-tab="purchased">Purchased</button>
@@ -24,6 +37,20 @@
   <!-- Books Grid -->
   <div id="books-container" class="books-grid"></div>
 
+  <!-- Modal for Read/Preview -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <iframe id="book-frame" src="" width="100%" height="500px"></iframe>
+    </div>
+  </div>
+
+  <!-- Footer (Optional: match home page style) -->
+  <footer>
+    <p>&copy; 2025 Rejoice Institute House. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
   <script type="module" src="dashboard.js"></script>
 </body>
 </html>

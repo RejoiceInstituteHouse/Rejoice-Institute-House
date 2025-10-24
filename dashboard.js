@@ -56,9 +56,20 @@ async function loadBooks(categoryFilter = null) {
           <p><strong>by ${book.author}</strong></p>
           <p>${book.description}</p>
           <p class="price">${book.price}</p>
-          <button class="read-btn">Read / Preview</button>
+          <button class="read-btn" data-content="${book.content}">Read / Preview</button>
         `;
+
         booksContainer.appendChild(card);
+
+        // Add event listener for the Read/Preview button
+        card.querySelector(".read-btn").addEventListener("click", (e) => {
+          const contentURL = e.target.getAttribute("data-content");
+          if (contentURL.endsWith(".pdf")) {
+            window.open(contentURL, "_blank"); // Opens PDF in a new tab
+          } else {
+            showModal(contentURL); // Show HTML/text content in modal
+          }
+        });
       }
     });
 
@@ -68,7 +79,7 @@ async function loadBooks(categoryFilter = null) {
   }
 }
 
-// Tabs
+// Tabs functionality
 const tabs = document.querySelectorAll(".tab-btn");
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
@@ -82,3 +93,25 @@ tabs.forEach((tab) => {
     else if (tabName === "library") loadBooks("library");
   });
 });
+
+// Modal functionality
+function showModal(url) {
+  const modal = document.getElementById("modal");
+  const iframe = document.getElementById("book-frame");
+  const closeBtn = document.querySelector(".close-btn");
+
+  iframe.src = url;
+  modal.style.display = "block";
+
+  closeBtn.onclick = () => {
+    modal.style.display = "none";
+    iframe.src = "";
+  }
+
+  window.onclick = (e) => {
+    if (e.target == modal) {
+      modal.style.display = "none";
+      iframe.src = "";
+    }
+  }
+}
