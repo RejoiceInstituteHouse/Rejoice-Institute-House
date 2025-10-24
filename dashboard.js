@@ -4,12 +4,12 @@ import { getFirestore, collection, getDocs, query, where } from "https://www.gst
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDLhqFt4rYXJgxbu5l4q50rx1FZkARyDYE",
+  authDomain: "rejoice-institute-house.firebaseapp.com",
+  projectId: "rejoice-institute-house",
+  storageBucket: "rejoice-institute-house.firebasestorage.app",
+  messagingSenderId: "154515308139",
+  appId: "1:154515308139:web:72b2e940af48283c787b2e"
 };
 
 const app = initializeApp(firebaseConfig);
