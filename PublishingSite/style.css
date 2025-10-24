@@ -217,3 +217,28 @@ nav ul li a:hover {
   font-weight: bold;
   margin-top: 0.5rem;
 }
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.tab-btn {
+  background: #f3f3f3;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.tab-btn:hover {
+  background: #e0e0e0;
+}
+
+.tab-btn.active {
+  background: #6c63ff;
+  color: white;
+}

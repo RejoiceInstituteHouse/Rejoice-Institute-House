@@ -126,17 +126,22 @@
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <div>
-      <h2>Rejoice Admin</h2>
-      <a href="#">📚 My Books</a>
-      <a href="#">🎨 Artworks</a>
-      <a href="#">📝 Add New</a>
-      <a href="#">💬 Messages</a>
-      <a href="#">⚙️ Settings</a>
-    </div>
+  <h1>Welcome to Your Dashboard</h1>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="free">Free Books</button>
+  <button class="tab-btn" data-tab="purchased">Purchased</button>
+  <button class="tab-btn" data-tab="exclusive">Exclusive</button>
+  <button class="tab-btn" data-tab="library">My Library</button>
+</div>
+
+<div id="books-container" class="books-grid"></div>
+
+<script type="module" src="dashboard.js"></script>
+
     <div class="logout-btn" onclick="logout()">Logout</div>
-  </div>
+  </div> <h2>Rejoice Admin</h2>
+      <a
 
   <div class="main-content">
     <div class="dashboard-header">
