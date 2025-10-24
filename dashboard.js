@@ -1,76 +1,71 @@
-// Import Firebase libraries
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ---------------- Firebase Config ----------------
+// Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDLhqFt4rYXJgxbu5l4q50rx1FZkARyDYE",
-  authDomain: "rejoice-institute-house.firebaseapp.com",
-  projectId: "rejoice-institute-house",
-  storageBucket: "rejoice-institute-house.firebasestorage.app",
-  messagingSenderId: "154515308139",
-  appId: "1:154515308139:web:72b2e940af48283c787b2e"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Get dashboard sections
-const dashboardContent = document.getElementById("dashboard-content");
-const freeTab = document.getElementById("free-books");
-const purchasedTab = document.getElementById("purchased-books");
-const exclusiveTab = document.getElementById("exclusive-books");
-const libraryTab = document.getElementById("library-books");
+// Tabs
+const tabs = document.querySelectorAll(".tab-btn");
+tabs.forEach(btn => {
+  btn.addEventListener("click", () => {
+    tabs.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
 
-// Hide dashboard until user verified
-dashboardContent.style.display = "none";
+    document.querySelectorAll(".books-grid").forEach(grid => grid.style.display = "none");
+    document.getElementById(btn.dataset.tab).style.display = "grid";
+  });
+});
 
-onAuthStateChanged(auth, async (user) => {
+// Logout
+const logoutBtn = document.getElementById("logout-btn");
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
+});
+
+// Load dashboard
+onAuthStateChanged(auth, async user => {
   if (!user) {
-    // If not logged in, redirect to login page
     window.location.href = "login.html";
     return;
   }
 
-  // Show dashboard after login
-  dashboardContent.style.display = "block";
+  document.getElementById("user-name").innerText = user.displayName || user.email;
 
-  const userEmail = user.email;
-  const booksCol = collection(db, "Words_of_Insights"); // use your collection name
+  // Load books
+  const freeGrid = document.getElementById("free");
+  const purchasedGrid = document.getElementById("purchased");
+  const exclusiveGrid = document.getElementById("exclusive");
 
-  const booksSnapshot = await getDocs(booksCol);
-  booksSnapshot.forEach((doc) => {
+  const booksSnapshot = await getDocs(collection(db, "books"));
+
+  booksSnapshot.forEach(doc => {
     const book = doc.data();
-
-    // Create a book card
-    const card = document.createElement("div");
-    card.className = "book-card";
-    card.innerHTML = `
-      <img src="${book.img}" class="book-cover" />
-      <h3>${book.title}</h3>
-      <p>${book.author}</p>
-      <p>${book.description}</p>
-      <p class="price">${book.price}</p>
-      <button class="read-btn" onclick="window.open('${book.content}', '_blank')">Read</button>
+    const cardHTML = `
+      <div class="book-card">
+        <img src="${book.coverURL}" alt="${book.title}">
+        <h3>${book.title}</h3>
+        <p>${book.description}</p>
+        <p class="price">${book.price === 0 ? 'Free' : 'Price: ' + book.price}</p>
+        <button class="btn-read">Read</button>
+      </div>
     `;
 
-    // Sort books by access
-    if (book.access === "free") freeTab.appendChild(card);
-    else if (book.access === "purchased" && book.ownerEmail === userEmail) purchasedTab.appendChild(card);
-    else if (book.access === "exclusive" && book.ownerEmail === userEmail) exclusiveTab.appendChild(card);
-
-    // Add all accessible books to library
-    if (book.access === "free" || book.ownerEmail === userEmail)
-      libraryTab.appendChild(card.cloneNode(true));
-  });
-});
-
-// Handle logout
-document.getElementById("logout-btn")?.addEventListener("click", () => {
-  signOut(auth).then(() => {
-    window.location.href = "login.html";
+    if (book.type === "free") freeGrid.innerHTML += cardHTML;
+    else if (book.type === "purchased" && book.userUID === user.uid) purchasedGrid.innerHTML += cardHTML;
+    else if (book.type === "exclusive" && book.userUID === user.uid) exclusiveGrid.innerHTML += cardHTML;
   });
 });
 

@@ -29,3 +29,7 @@ registerForm.addEventListener("submit", async (e) => {
     alert(error.message);
   }
 });
+import { updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+await createUserWithEmailAndPassword(auth, email, password);
+await updateProfile(auth.currentUser, { displayName: document.getElementById("register-name").value });
