@@ -3,120 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Books | Words of Insight</title>
+  <title>Books | Rejoice Institute House</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDLhqFt4rYXJgxbu5l4q50rx1FZkARyDYE",
-      authDomain: "rejoice-institute-house.firebaseapp.com",
-      projectId: "rejoice-institute-house",
-      storageBucket: "rejoice-institute-house.firebasestorage.app",
-      messagingSenderId: "154515308139",
-      appId: "1:154515308139:web:72b2e940af48283c787b2e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function loadBooks() {
-      const booksContainer = document.getElementById("books-container");
-      const querySnapshot = await getDocs(collection(db, "books"));
-      booksContainer.innerHTML = ""; // clear first
-
-      querySnapshot.forEach((doc) => {
-        const book = doc.data();
-
-        const bookCard = `
-          <div class="book-card">
-            <img src="${book.coverURL}" alt="${book.title}" class="book-cover" />
-            <h3>${book.title}</h3>
-            <p>${book.description}</p>
-            <p><strong>Price:</strong> ${book.price}</p>
-            <button onclick="window.location.href='book.html?id=${doc.id}'">View Details</button>
-          </div>
-        `;
-        booksContainer.innerHTML += bookCard;
-      });
-    }
-
-    window.addEventListener("DOMContentLoaded", loadBooks);
-  </script>
-
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #fafafa;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #222;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    .books-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 30px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .book-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-
-    .book-card:hover {
-      transform: scale(1.03);
-    }
-
-    .book-cover {
-      width: 100%;
-      border-radius: 10px;
-      height: 300px;
-      object-fit: cover;
-    }
-
-    button {
-      background-color: #111;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background-color: #333;
-    }
-  </style>
+  <script type="module" src="books.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>Words of Insight – Books</h1>
-  </header>
 
-  <section class="books-section" id="books-container">
-    <p>Loading books...</p>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">Rejoice Institute House</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="books.html" class="active">Books</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <!-- Books Section -->
+  <section class="hero">
+    <h1>Our Book Collection</h1>
+    <p>Discover books, poetry, and stories from the heart of Rejoice Institute House.</p>
   </section>
+
+  <div class="container books-container">
+    <div id="books-list" class="books-grid">
+      <!-- Books will load here from Firestore -->
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Rejoice Institute House. All rights reserved.</p>
+  </footer>
+
 </body>
 </html>
 
